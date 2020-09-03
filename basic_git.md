@@ -52,9 +52,9 @@ where "1fce8a" should be the commit identifier corresponding to whichever commit
 To return to the most recent commit that you have made on a repo, you need to use the command:
 
 ```zsh
-git checkout .
+git checkout master
 ```
-This resets all files in your directory back to their *most recent commit* versions.  
+This resets all files in your directory back to their *most recent commit* versions for branch "master".  
 
 
 ## Adding new source code files to the repository
