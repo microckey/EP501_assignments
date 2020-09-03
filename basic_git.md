@@ -25,7 +25,7 @@ Note that you will need to paste in the URL corresponding to your forked version
 
 Your local copy of the code can now be edited with any software that you wish, including VIM, MATLAB editors, or Spyder.  Every change that you make will be tracked via "git" when you clone the repo this way.
 
-## Keeping track of code changes
+## Committing of code changes
 
 Once you work with your local copy and make changes you can create *commits* to make it easier to track development of your code and associated errors.  A commit is a "bookmark" to a "snapshot" of the state of your code at the time that it is made.  As such as you are developing you will want to make commits (bookmarks) fairly often so that you can go back and view the state of your code at any point in the past at which you've made a commit.  A key feature of "git" is that allows you to view or work with a copy of the code corresponding to any *commit* that you or anyone else have ever made on your repository.  Once you have made source code changes and wish to make a commit, you can do so by issuing a command from the main repo directory like:
 
@@ -52,3 +52,7 @@ To return to the most recent commit that you have made on a repo, you need to us
 git checkout .
 ```
 This resets all files in your directory back to their most recent versions (commits).  
+
+
+## Pushing local commits back to your GitHub online repository
+
