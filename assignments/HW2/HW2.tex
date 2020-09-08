@@ -38,7 +38,7 @@
 ~\\~\\~\\
 \textbf{Purpose:}  
 \begin{itemize}
-  \item Learn principles behind numerical linear algebraic techniques including LU factorization and iterative methods.  
+  \item Learn principles behind numerical linear algebraic techniques, in the case of this assignment LU factorization and iterative methods.  
   \item Develop good coding and documentation practices, so that your programs are easily run and understood by others.  
   \item Hone skills of developing, debugging, and testing your own software
   \item Learn how to build more complicated programs on top of existing, simple codes that have been provided to you.
@@ -49,23 +49,23 @@
 \begin{enumerate}
   \item LU factorization and its application to solve linear systems (see pages 45-46 in the book)
   \begin{itemize}
-    \item[(a)] Alter (i.e. create a new version of) your simple forward elimination function (as opposed to full Gaussian elimination) that performs Doolittle LU factorization.  Please read the book section 1.4, which explains how this can be implemented in an efficient way (the book also gives an example fortran code you can look over).  
-    \item[(b)] Using just the output of the factorization and a back-substitution function (provided in the repository), solve the test linear system of equations given in the \texttt{testproblem.mat} file.  
+    \item[(a)] Create a new version of your simple forward elimination function from the first assignment so that it performs Doolittle LU factorization.  Please read the book section 1.4, which explains how this can be implemented in an efficient way (the book also gives an example fortran code you can look over and potentially use as a template for constructing your MATLAB or Python code).  
+    \item[(b)] Using just the output of the factorization and a back-substitution function (provided in the repository), solve the test linear system of equations given in the \texttt{../HW2/testproblem.mat} file.  
     \item[(c)] Use your LU factorized test matrix to set up a solution for the this system with different right hand sides, i.e. solve:
     \begin{eqnarray}
       \underline{\underline{A}} ~\underline{x} &=& \underline{b} \\
       \underline{\underline{A}} ~\underline{x}_2 &=& \underline{b}_2 \\
       \underline{\underline{A}} ~\underline{x}_3 &=& \underline{b}_3    
     \end{eqnarray}   
-    Using only forward- and back-substitution codes (along with the matrices $\underline{\underline{L}}, \underline{\underline{U}}$).  Multiple right-hand side test data are included in the \texttt{testproblem.mat} file as the variables (\texttt{b,b2,b3}).
-    \item[(d)] Use your LU factorization function and multiple right-hand side solution (using forward and back substitution as in part c) to find a matrix inverse for the test problem in the course repository.  
+    Using only forward- and back-substitution codes (along with the matrices $\underline{\underline{L}}, \underline{\underline{U}}$ from the factorization).  Multiple right-hand side test data are included in the \texttt{../HW1/testproblem.mat} file from the prior assignment as the variables (\texttt{b,b2,b3}).
+    \item[(d)] Use your LU factorization function and multiple right-hand side solution (using forward and back substitution as in part c) to find a matrix inverse for the test problem defined by the $\underline{\underline{A}}$ and  $\underline{b}_j$ matrices in \texttt{testproblem.mat}.  
   \end{itemize}
   
   
   \item Iterative methods for solving linear systems:  
   \begin{itemize}
-    \item[(a)] Using the Jacobi function from the repository, create a new function that implements successive over-relaxation.  
-    \item[(b)] Try this solver on the \emph{iterative} test problem in the repository and show that it gives the same results as the built-in Matlab utilities. 
+    \item[(a)] Starting with the Jacobi function source code from the repository (or starting from scratch if you wish), create a new function that implements successive over-relaxation.  
+    \item[(b)] Try this solver on the \emph{iterative} test problem in this directory (\texttt{./iterative\_testproblem.mat}) and show that it gives the same results as the built-in Matlab utilities. 
   \end{itemize}  
 \end{enumerate}
 
