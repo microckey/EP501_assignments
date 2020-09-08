@@ -12,34 +12,38 @@
 
 \begin{document}
 
-\title{EP 501 Homework 1:  Numerical Linear Algebra}
+\title{EP 501 Homework 1:  Numerical Linear Algebra, part I}
 
 \maketitle
 
 ~\\
 \textbf{Instructions:}  
 \begin{itemize}
-  \item Complete all problems.
-  \item Submit all source code and publish Matlab results via Canvas.  
-  \item Discussing the assignment with others is fine, but you must not copy anyone's code.  
-  \item I must be able to run your code and produce all results by executing a single top-level Matlab script, e.g. \textsf{assignment1.m} or similar.  
-  \item You may use any of the example codes from our course repository:  \url{https://github.com/mattzett/EP501/}.
-  \item Do not copy verbatim any other codes (i.e. any source codes other than from our course repository).  You may use other examples as a reference but you must write you own programs (except for those I give you).  
+  \item Complete all listed steps to the problems.
+  \item Submit all source code, which must be either MATLAB or Python, and output (results printed to the screen or plotted) via Canvas.  
+  \item Results must be compiled into a single .pdf file which contains descriptions of the calculations that you have done alongside the results.  
+  \item Source codes must run and produce the same essential output presented in your documents.  
+  \item Discussing the assignment with others is fine, but you must not copy the code of another student \emph{verbatim}; this is considered an academic integrity violation.  
+  \item During submission on the canvas website compress all of your files for a given assignment into a single .zip file, e.g. \textsf{assignment1.zip} .  I should be able to run your codes by unzipping the files and then opening them and running them in the appropriate developer environment (MATLAB or Spyder).  
+  \item You may use, \emph{verbatim} or modified, any of the example codes from one of the course repositories contained on the GitHub organization website  \url{https://github.com/Zettergren-Courses}.
   \item For demonstrating that your code is correct when you turn in the assignment, you must use the test problems in the course repository found in \texttt{linear\_algebra/testproblem.mat} (elimination method tests, including multiple right-hand sides), \texttt{linear\_algebra/lowertriang\_testproblem.mat} (lower triangular tests) and \\ \texttt{linear\_algebra/iterative\_testproblem.mat} (iterative method tests requiring diagonal dominance).  To load these data into your workspace use:
     \begin{verbatim}
     load testproblem.mat
     \end{verbatim}
     or double click on the .mat file in the Matlab file browser.  
 \end{itemize}
+
+
+
 ~\\~\\~\\
-\textbf{Purpose of this assignment:}  
+\textbf{Purpose:}  
 \begin{itemize}
-  \item Demonstrate competency with existing numerical linear algebra tools in Matlab
-  \item Refresh basic Matlab and coding skills
-  \item Learn principles behind numerical linear algebraic techniques like elimination, iteration, and LU factorization.  
-  \item Develop good coding and documentation practices, such that your programs are easily understood by others.  
+  \item Demonstrate competency with existing numerical linear algebra tools in MATLAB and Python
+  \item Refresh basic MATLAB/Python coding skills
+  \item Learn principles behind numerical linear algebraic techniques, particularly elimination-based methods.  
+  \item Develop good coding and documentation practices, so that your programs are easily run and understood by others.  
   \item Hone skills of developing, debugging, and testing your own software
-  \item Learn how to build programs on top of existing codes
+  \item Learn how to build more complicated programs on top of existing, simple codes that have been provided to you.
 \end{itemize}
 
 \pagebreak
@@ -52,6 +56,7 @@
     \item[(c)] Write a forward substitution function for a lower-triangular system.  
     \item[(d)] Verify that your function gives the same results as the Matlab built-in solution routines for the \emph{lower triangular} test problem (e.g. \texttt{A\textbackslash b} or \texttt{inv(A)*b}).  
   \end{itemize}
+  
   \item Elimination methods for computing matrix inverses:  
   \begin{itemize}
     \item[(a)] Alter (i.e. create a new version of) your simple elimination function to work for multiple right-hand sides (RHS).  
@@ -59,24 +64,7 @@
     \item[(c)] Find the inverse of the test problem matrix using your Gauss-Jordan elimination function
     \item[(d)] Compare your results with Matlab built-in inverse operation(s) and show that they agree.
   \end{itemize}
-  \item LU factorization and its application to solve linear systems (see pages 45-46 in the book)
-  \begin{itemize}
-    \item[(a)] Alter (i.e. create a new version of) your simple forward elimination function (as opposed to full Gaussian elimination) that performs Doolittle LU factorization.  Please read the book section 1.4, which explains how this can be implemented in an efficient way (the book also gives an example fortran code you can look over).  
-    \item[(b)] Using just the output of the factorization and a back-substitution function (provided in the repository), solve the test linear system of equations given in the \texttt{testproblem.mat} file.  
-    \item[(c)] Use your LU factorized test matrix to set up a solution for the this system with different right hand sides, i.e. solve:
-    \begin{eqnarray}
-      \underline{\underline{A}} ~\underline{x} &=& \underline{b} \\
-      \underline{\underline{A}} ~\underline{x}_2 &=& \underline{b}_2 \\
-      \underline{\underline{A}} ~\underline{x}_3 &=& \underline{b}_3    
-    \end{eqnarray}   
-    Using only forward- and back-substitution codes (along with the matrices $\underline{\underline{L}}, \underline{\underline{U}}$).  Multiple right-hand side test data are included in the \texttt{testproblem.mat} file as the variables (\texttt{b,b2,b3}).
-    \item[(d)] Use your LU factorization function and multiple right-hand side solution (using forward and back substitution as in part c) to find a matrix inverse for the test problem in the course repository.  
-  \end{itemize}
-  \item Iterative methods for solving linear systems:  
-  \begin{itemize}
-    \item[(a)] Using the Jacobi function from the repository, create a new function that implements successive over-relaxation.  
-    \item[(b)] Try this solver on the \emph{iterative} test problem in the repository and show that it gives the same results as the built-in Matlab utilities. 
-  \end{itemize}  
+
   \item Numerical approaches for computing determinants:  
   \begin{itemize}
     \item[(a)] Create a new version of the Gaussian elimination function (from the course repo) that also outputs the determinant of the system (cf. section 1.3.6 of the textbook).  
