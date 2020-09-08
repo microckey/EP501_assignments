@@ -19,7 +19,7 @@ Note that additional READMEs for the course will also be included in this reposi
 
 ## Current (FA 2020) term assignments
 
-Please read all instructions carefully before starting and assignment and please ask questions if something is unclear.  
+Please read all instructions carefully before starting and assignment and please ask questions if something is unclear.  Please note that test data, where applicable, for each assignemnt are also provided in that assignment directory.  These are in ```.mat``` format; to load such files in python you will need to use ```scipy.io``` as done in the example in the EP501_repository here:  [https://github.com/Zettergren-Courses/EP501\_python/tree/master/basic\_python](https://github.com/Zettergren-Courses/EP501_python/tree/master/basic_python).
 
 ### Project 1
 
