@@ -26,7 +26,11 @@
   \item Discussing the assignment with others is fine, but you must not copy the code of another student \emph{verbatim}; this is considered an academic integrity violation.  
   \item During submission on the canvas website compress all of your files for a given assignment into a single .zip file, e.g. \textsf{assignment1.zip} .  I should be able to run your codes by unzipping the files and then opening them and running them in the appropriate developer environment (MATLAB or Spyder).  
   \item You may use, \emph{verbatim} or modified, any of the example codes from one of the course repositories contained on the GitHub organization website  \url{https://github.com/Zettergren-Courses}.
-  \item For demonstrating that your code is correct when you turn in the assignment, you must use the test problems in the course repository found in \texttt{linear\_algebra/testproblem.mat} (elimination method tests, including multiple right-hand sides), \texttt{linear\_algebra/lowertriang\_testproblem.mat} (lower triangular tests).
+  \item For demonstrating that your code is correct when you turn in the assignment, you must use the test problems in the course repository found in \texttt{linear\_algebra/testproblem.mat} (elimination method tests, including multiple right-hand sides), \texttt{linear\_algebra/lowertriang\_testproblem.mat} (lower triangular tests).  To load these data into your workspace use:
+    \begin{verbatim}
+    load iterative_testproblem.mat
+    \end{verbatim}
+    or double click on the .mat file in the Matlab file browser.  To the load these files in Python see the example included in the Python basics section of the course repository (i.e. ./basic\_python/load\_matlab\_file.py).  
 \end{itemize}
 
 
