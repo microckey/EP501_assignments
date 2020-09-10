@@ -48,10 +48,10 @@
 \pagebreak
 
 \begin{enumerate}
-  \item LU factorization and its application to solve linear systems (see pages 45-46 in the book)
+  \item LU factorization and its application to solve linear systems (cf. pages 45-46 in the book)
   \begin{itemize}
-    \item[(a)] Create a new version of your simple forward elimination function from the first assignment so that it performs Doolittle LU factorization.  Please read the book section 1.4, which explains how this can be implemented in an efficient way (the book also gives an example fortran code you can look over and potentially use as a template for constructing your MATLAB or Python code).  
-    \item[(b)] Using just the output of the factorization and a back-substitution function (provided in the repository), solve the test linear system of equations given in the \texttt{../HW2/testproblem.mat} file.  
+    \item[(a)] Create a new version of your simple forward elimination function from the first assignment so that it performs Doolittle LU factorization.  Please read the book section 1.4, which explains how this can be implemented in an efficient manner.  The book also gives an example fortran code you can look over and potentially use as a template for constructing your MATLAB or Python code if you wish.  
+    \item[(b)] Using just the output of the factorization and a back-substitution function (provided in the repository), solve the test linear system of equations given in the \texttt{../HW1/testproblem.mat} file.  Note here that we are using, for this problem, the test data from the first project/assignment.  
     \item[(c)] Use your LU factorized test matrix to set up a solution for the this system with different right hand sides, i.e. solve:
     \begin{eqnarray}
       \underline{\underline{A}} ~\underline{x} &=& \underline{b} \\
