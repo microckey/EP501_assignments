@@ -1,4 +1,4 @@
-% HW1 1(b)
+% HW 1 Problem 1(b)
 
 clear
 clc
@@ -9,3 +9,6 @@ load('testproblem.mat')
 fsoln = simforel(A,b);
 
 
+% Awork=cat(2,A,b);
+% fsoln = simforelmltlb(Awork);
+% A\b

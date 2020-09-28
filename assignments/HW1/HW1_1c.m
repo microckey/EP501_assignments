@@ -1,4 +1,4 @@
-% HW1 1(c) & (d)
+% HW 1 Problem 1(c) & (d)
 
 clear
 clc

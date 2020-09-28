@@ -1,5 +1,7 @@
 function Awork = simforel(A,b)
 
+% HW 1 Problem 1(a)
+
 %% Illustrate vanilla forward elimination
 nref=length(b);               %system size for reference problem
 

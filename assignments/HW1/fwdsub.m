@@ -1,8 +1,10 @@
 function x = fwdsub(A)
 
-% This function performs forward substitution on an lower triangular matrix that has
-% been modified by concatenating the RHS of the system.  
-% Note that B is assumed to be lower triangular at this point.
+% HW 1 Problem 1(c) & (d)
+% The input matrix A is a lower triangular matrix
+
+% This function performs forward substitution on an lower triangular matrix
+% that has been modified by concatenating the RHS of the system.  
 
 
 n = size(A,1);                   %number of unknowns in the system
