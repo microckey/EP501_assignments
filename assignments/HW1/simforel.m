@@ -1,6 +1,7 @@
-function Awork = simforel(A,b)
+function [Awork,xsoln,xmat,Errr] = simforel(A,b)
 
 % HW 1 Problem 1(a)
+% Function that uses simple forward elimination
 
 %% Illustrate vanilla forward elimination
 nref=length(b);               %system size for reference problem
@@ -16,12 +17,18 @@ end %for
 
 disp('elim([Aref,bref]) = ');
 disp(Awork);
- 
+
 %% Illustrate back substitution on B using provided Matlab function
 xsoln=backsub(Awork);
 disp('Elimination/back sub solution:  ');
 disp(xsoln);
+
+xmat = A\b;
 disp('Matlab,GNU/Octave built-in solution:  ');
-disp(A\b);
+disp(xmat);
+
+Errr = xmat - xsoln;
+disp('The error is:  ');
+disp(Errr);
 
 end % function

@@ -40,7 +40,7 @@ disp(Aworkdiag);
 AworkRE = Aworkdiag;
 
 for dg = 1 : nrefr
-AworkRE(dg,:) = AworkRE(dg,:)./AworkRE(dg,dg);
+    AworkRE(dg,:) = AworkRE(dg,:)./AworkRE(dg,dg);
 end % for
 
 disp('The reduced row-echelon form is: ');

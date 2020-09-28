@@ -1,0 +1,175 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>simforelmltlb</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-09-28"><meta name="DC.source" content="simforelmltlb.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Illustrate vanilla forward elimination</a></li><li><a href="#4">Illustrate back substitution on B using provided Matlab function</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> y = simforelmltlb(Awork)
+</pre><pre class="codeinput"><span class="comment">% HW 1 Problem 2 (a)</span>
+<span class="comment">% Simple elim. fct. w/ multiple RHS</span>
+</pre><h2 id="3">Illustrate vanilla forward elimination</h2><pre class="codeinput">nrefr = size(Awork,1);    <span class="comment">% # of rows</span>
+nrefc = size(Awork,2);    <span class="comment">% # of columns</span>
+
+<span class="comment">%note that the elimination procedure coded below modifies the matrix B</span>
+Aworkut = Awork;
+
+<span class="keyword">for</span> ir1 = 2 : nrefr      <span class="comment">%loop over rows from 2 to n performing elimination, this index marks what row we are starting the elimination from (i.e. using) for this particular column</span>
+    <span class="keyword">for</span> ir2 = ir1 : nrefr                                     <span class="comment">%this index marks the present position where elimination is being performed - i.e. where we are applying the elementary row operations</span>
+        fact=Aworkut(ir2,ir1-1);                                    <span class="comment">%multiplier of the variable we are attempting to eliminate, its ir-1 column of this row</span>
+        Aworkut(ir2,:)=Aworkut(ir2,:)-fact/Aworkut(ir1-1,ir1-1).*Aworkut(ir1-1,:);    <span class="comment">%subtract off previous row modified by a factor that eliminates the ir-1 column term in this row (so it has only super-diagonal elements), this is a little bit wasteful as it uses entire row...</span>
+    <span class="keyword">end</span> <span class="comment">%for</span>
+<span class="keyword">end</span> <span class="comment">%for</span>
+
+disp(<span class="string">'elim([Aref,bref]) = '</span>);
+disp(Aworkut);
+</pre><pre class="codeoutput error">Not enough input arguments.
+
+Error in simforelmltlb (line 8)
+nrefr = size(Awork,1);    % # of rows
+</pre><h2 id="4">Illustrate back substitution on B using provided Matlab function</h2><pre class="codeinput"><span class="comment">% This function performs back substitution on an upper triangular matrix that has</span>
+<span class="comment">% been modified by concatenating the RHS of the system.</span>
+<span class="comment">% Note that B is assumed to be upper triangular at this point.</span>
+
+n = nrefr;              <span class="comment">%number of unknowns in the system</span>
+nb = nrefc - nrefr;     <span class="comment">% # of RHS</span>
+x = zeros(n,nb);                  <span class="comment">%space in which to store our solution vector</span>
+
+<span class="keyword">for</span> k = n+1 : nrefc
+    x(n,k) = Aworkut(n,k)./Aworkut(n,n);          <span class="comment">%finalized solution for last variables of all RHS</span>
+    <span class="keyword">for</span> l = n-1 : -1 : 1
+        x(l,k) = Aworkut(l,k);       <span class="comment">%assume we're only dealing with a single right-hand side here.</span>
+        fact = Aworkut(l,l);         <span class="comment">%diagonal element to be divided through doing subs for the ir2 row</span>
+        <span class="keyword">for</span> ic = l+1 : n
+            x(l,k) = x(l,k)-Aworkut(l,ic)*x(ic,k);
+        <span class="keyword">end</span> <span class="comment">%for</span>
+        x(l,k)=x(l,k)/fact;      <span class="comment">%divide once at the end to minimize number of ops</span>
+    <span class="keyword">end</span> <span class="comment">%for</span>
+<span class="keyword">end</span> <span class="comment">% for</span>
+
+y = x(1:n , n+1:nrefc);
+
+disp(<span class="string">'Elimination/back sub solution:  '</span>);
+disp(y);
+<span class="comment">% disp('Matlab,GNU/Octave built-in solution:  ');</span>
+<span class="comment">% disp(A\b);</span>
+</pre><pre class="codeinput"><span class="keyword">end</span> <span class="comment">% function</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function y = simforelmltlb(Awork)
+
+% HW 1 Problem 2 (a)
+% Simple elim. fct. w/ multiple RHS
+
+%% Illustrate vanilla forward elimination
+
+nrefr = size(Awork,1);    % # of rows
+nrefc = size(Awork,2);    % # of columns
+
+%note that the elimination procedure coded below modifies the matrix B
+Aworkut = Awork;
+
+for ir1 = 2 : nrefr      %loop over rows from 2 to n performing elimination, this index marks what row we are starting the elimination from (i.e. using) for this particular column
+    for ir2 = ir1 : nrefr                                     %this index marks the present position where elimination is being performed - i.e. where we are applying the elementary row operations
+        fact=Aworkut(ir2,ir1-1);                                    %multiplier of the variable we are attempting to eliminate, its ir-1 column of this row
+        Aworkut(ir2,:)=Aworkut(ir2,:)-fact/Aworkut(ir1-1,ir1-1).*Aworkut(ir1-1,:);    %subtract off previous row modified by a factor that eliminates the ir-1 column term in this row (so it has only super-diagonal elements), this is a little bit wasteful as it uses entire row...
+    end %for
+end %for
+
+disp('elim([Aref,bref]) = ');
+disp(Aworkut);
+
+%% Illustrate back substitution on B using provided Matlab function
+
+% This function performs back substitution on an upper triangular matrix that has
+% been modified by concatenating the RHS of the system.
+% Note that B is assumed to be upper triangular at this point.
+
+n = nrefr;              %number of unknowns in the system
+nb = nrefc - nrefr;     % # of RHS
+x = zeros(n,nb);                  %space in which to store our solution vector
+
+for k = n+1 : nrefc
+    x(n,k) = Aworkut(n,k)./Aworkut(n,n);          %finalized solution for last variables of all RHS
+    for l = n-1 : -1 : 1
+        x(l,k) = Aworkut(l,k);       %assume we're only dealing with a single right-hand side here.
+        fact = Aworkut(l,l);         %diagonal element to be divided through doing subs for the ir2 row
+        for ic = l+1 : n
+            x(l,k) = x(l,k)-Aworkut(l,ic)*x(ic,k);
+        end %for
+        x(l,k)=x(l,k)/fact;      %divide once at the end to minimize number of ops
+    end %for
+end % for
+
+y = x(1:n , n+1:nrefc);
+
+disp('Elimination/back sub solution:  ');
+disp(y);
+% disp('Matlab,GNU/Octave built-in solution:  ');
+% disp(A\b);
+
+end % function
+##### SOURCE END #####
+--></body></html>

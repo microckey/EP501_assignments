@@ -1,0 +1,293 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>HW1_2cd</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-09-28"><meta name="DC.source" content="HW1_2cd.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Gauss-Jordan elimination to get A inverse and diaplay the result</a></li><li><a href="#3">Display the MATLAB buil-in result</a></li><li><a href="#4">Compute &amp; display the error</a></li></ul></div><pre class="codeinput"><span class="comment">% HW 1 Problem 2(c) &amp; (d)</span>
+<span class="comment">% Find the inverse</span>
+
+clear
+clc
+close <span class="string">all</span>
+
+load(<span class="string">'testproblem.mat'</span>)
+
+szA = size(A,1);
+I = eye(szA);
+A4GJ = cat(2,A,I); <span class="comment">% concatenated matrix of A &amp; I</span>
+</pre><h2 id="2">Gauss-Jordan elimination to get A inverse and diaplay the result</h2><pre class="codeinput">GJelsol = GJel(A4GJ);
+disp(<span class="string">'The inverse matrix of A is:  '</span>);
+disp(GJelsol)
+</pre><pre class="codeoutput">The upper triangular matrix is: 
+  Columns 1 through 7
+
+   -1.0149   -2.1321    2.1778   -0.2730   -0.7841   -0.4677   -0.2841
+         0    2.1349    0.1277    1.7030   -1.4414    0.0922    0.0452
+         0         0   -2.1480    0.2136    1.1336    1.4554   -1.4883
+         0         0         0    0.8624   -0.8568   -0.8022    0.3901
+         0         0   -0.0000         0    0.1172    1.3485   -0.9577
+         0         0    0.0000         0         0   -8.6038    6.3411
+         0         0   -0.0000         0         0         0    0.7162
+         0         0   -0.0000         0         0         0   -0.0000
+
+  Columns 8 through 14
+
+   -0.2883    1.0000         0         0         0         0         0
+    0.4839   -0.4641    1.0000         0         0         0         0
+   -1.6670   -0.0643    0.4295    1.0000         0         0         0
+    1.3688   -0.4115    0.2468   -0.0696    1.0000         0         0
+    1.1407    0.7086   -0.0734   -0.2259   -1.4176    1.0000         0
+  -11.5207   -5.0434    1.2794    2.3469    9.4661   -8.1997    1.0000
+    7.2391    0.6672   -1.9373   -2.0543   -1.5336    2.9258   -0.8867
+   13.5981    1.4177   -3.8323   -3.8600   -3.9135    5.8215   -1.6478
+
+  Columns 15 through 16
+
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+    1.0000         0
+    2.0441    1.0000
+
+The diagonal matrix is: 
+  Columns 1 through 7
+
+   -1.0149         0         0         0         0         0    0.0000
+         0    2.1349         0         0         0         0    0.0000
+         0         0   -2.1480         0         0         0    0.0000
+         0         0    0.0000    0.8624         0         0   -0.0000
+         0         0   -0.0000         0    0.1172         0   -0.0000
+         0         0    0.0000         0         0   -8.6038         0
+         0         0    0.0000         0         0         0    0.7162
+         0         0   -0.0000         0         0         0   -0.0000
+
+  Columns 8 through 14
+
+   -0.0000    0.4547   -0.3892   -0.0286    0.0894    0.5882   -1.0630
+    0.0000   -0.1152   -0.4159   -0.5244   -1.3373    0.4222   -0.5748
+   -0.0000   -0.4429    0.2286    0.8090    2.3959    0.0473   -1.2039
+    0.0000   -0.2803    0.3666    0.0624   -0.1440   -0.2697    0.7603
+    0.0000   -0.0082   -0.0654   -0.0469   -0.1531    0.0083    0.0766
+    0.0000   -3.0676   -2.8780   -0.9284    1.2826   -1.7325   -0.3123
+   -0.0000   -0.0875    0.1028    0.0006    0.5498   -0.1734   -0.0095
+   13.5981    1.4177   -3.8323   -3.8600   -3.9135    5.8215   -1.6478
+
+  Columns 15 through 16
+
+    0.5436   -0.2620
+    0.4744    0.4961
+   -0.6094   -0.8319
+    0.3712    0.2249
+    0.1044    0.0758
+    2.5125    5.5607
+   -0.0882   -0.5324
+    2.0441    1.0000
+
+The reduced row-echelon form is: 
+  Columns 1 through 7
+
+    1.0000         0         0         0         0         0   -0.0000
+         0    1.0000         0         0         0         0    0.0000
+         0         0    1.0000         0         0         0   -0.0000
+         0         0    0.0000    1.0000         0         0   -0.0000
+         0         0   -0.0000         0    1.0000         0   -0.0000
+         0         0   -0.0000         0         0    1.0000         0
+         0         0    0.0000         0         0         0    1.0000
+         0         0   -0.0000         0         0         0   -0.0000
+
+  Columns 8 through 14
+
+    0.0000   -0.4480    0.3835    0.0281   -0.0881   -0.5795    1.0474
+    0.0000   -0.0540   -0.1948   -0.2456   -0.6264    0.1978   -0.2692
+    0.0000    0.2062   -0.1064   -0.3766   -1.1154   -0.0220    0.5605
+    0.0000   -0.3250    0.4251    0.0724   -0.1670   -0.3128    0.8816
+    0.0000   -0.0697   -0.5582   -0.4000   -1.3059    0.0704    0.6537
+   -0.0000    0.3565    0.3345    0.1079   -0.1491    0.2014    0.0363
+   -0.0000   -0.1222    0.1436    0.0008    0.7677   -0.2421   -0.0132
+    1.0000    0.1043   -0.2818   -0.2839   -0.2878    0.4281   -0.1212
+
+  Columns 15 through 16
+
+   -0.5356    0.2581
+    0.2222    0.2324
+    0.2837    0.3873
+    0.4305    0.2608
+    0.8908    0.6467
+   -0.2920   -0.6463
+   -0.1231   -0.7433
+    0.1503    0.0735
+
+The inverse matrix of A is:  
+  Columns 1 through 7
+
+   -0.4480    0.3835    0.0281   -0.0881   -0.5795    1.0474   -0.5356
+   -0.0540   -0.1948   -0.2456   -0.6264    0.1978   -0.2692    0.2222
+    0.2062   -0.1064   -0.3766   -1.1154   -0.0220    0.5605    0.2837
+   -0.3250    0.4251    0.0724   -0.1670   -0.3128    0.8816    0.4305
+   -0.0697   -0.5582   -0.4000   -1.3059    0.0704    0.6537    0.8908
+    0.3565    0.3345    0.1079   -0.1491    0.2014    0.0363   -0.2920
+   -0.1222    0.1436    0.0008    0.7677   -0.2421   -0.0132   -0.1231
+    0.1043   -0.2818   -0.2839   -0.2878    0.4281   -0.1212    0.1503
+
+  Column 8
+
+    0.2581
+    0.2324
+    0.3873
+    0.2608
+    0.6467
+   -0.6463
+   -0.7433
+    0.0735
+
+</pre><h2 id="3">Display the MATLAB buil-in result</h2><pre class="codeinput">disp(<span class="string">'Matlab,GNU/Octave built-in solution:  '</span>);
+disp(inv(A))
+</pre><pre class="codeoutput">Matlab,GNU/Octave built-in solution:  
+  Columns 1 through 7
+
+   -0.4480    0.3835    0.0281   -0.0881   -0.5795    1.0474   -0.5356
+   -0.0540   -0.1948   -0.2456   -0.6264    0.1978   -0.2692    0.2222
+    0.2062   -0.1064   -0.3766   -1.1154   -0.0220    0.5605    0.2837
+   -0.3250    0.4251    0.0724   -0.1670   -0.3128    0.8816    0.4305
+   -0.0697   -0.5582   -0.4000   -1.3059    0.0704    0.6537    0.8908
+    0.3565    0.3345    0.1079   -0.1491    0.2014    0.0363   -0.2920
+   -0.1222    0.1436    0.0008    0.7677   -0.2421   -0.0132   -0.1231
+    0.1043   -0.2818   -0.2839   -0.2878    0.4281   -0.1212    0.1503
+
+  Column 8
+
+    0.2581
+    0.2324
+    0.3873
+    0.2608
+    0.6467
+   -0.6463
+   -0.7433
+    0.0735
+
+</pre><h2 id="4">Compute &amp; display the error</h2><pre class="codeinput">Errr = inv(A) - GJelsol;
+disp(<span class="string">'The error is:  '</span>);
+disp(Errr)
+</pre><pre class="codeoutput">The error is:  
+   1.0e-15 *
+
+  Columns 1 through 7
+
+    0.3331    0.2220    0.7286   -0.4718         0    0.2220    0.2220
+   -0.1665    0.1388    0.0833         0   -0.0555    0.1110    0.0278
+   -0.1665    0.2082    0.1665   -0.6661    0.2394    0.1110    0.4441
+   -0.2776    0.2220   -0.0971   -0.5551    0.5551   -0.1110    0.4441
+   -0.5551    0.4441   -0.1110   -0.8882    0.5412    0.2220    0.6661
+    0.1665   -0.3331   -0.3469    0.4163   -0.2220   -0.1735         0
+    0.2359   -0.3886   -0.5694    0.4441   -0.0833   -0.3105   -0.0833
+   -0.0971         0   -0.0555   -0.1110    0.0555    0.0416    0.0278
+
+  Column 8
+
+    0.1110
+    0.1110
+         0
+   -0.6661
+   -0.6661
+         0
+   -0.3331
+         0
+
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% HW 1 Problem 2(c) & (d)
+% Find the inverse
+
+clear
+clc
+close all
+
+load('testproblem.mat')
+
+szA = size(A,1);
+I = eye(szA);
+A4GJ = cat(2,A,I); % concatenated matrix of A & I
+
+%% Gauss-Jordan elimination to get A inverse and diaplay the result
+GJelsol = GJel(A4GJ);
+disp('The inverse matrix of A is:  ');
+disp(GJelsol)
+
+%% Display the MATLAB buil-in result
+disp('Matlab,GNU/Octave built-in solution:  ');
+disp(inv(A))
+
+%% Compute & display the error
+Errr = inv(A) - GJelsol;
+disp('The error is:  ');
+disp(Errr)
+
+##### SOURCE END #####
+--></body></html>

@@ -1,5 +1,5 @@
 % HW 1 Problem 2 (a)
-% Simple elim test w/ multiple RHS
+% Simple elim. test w/ multiple RHS
 
 clear
 clc

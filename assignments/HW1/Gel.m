@@ -1,6 +1,10 @@
 function [Amod,ord,nuroich,detA]=Gel(A,b,verbose)
 
-% [Amod,ord]=Gauss_elim(A,b,verbose)
+% HW 1 Problem 3 (a)
+% Function that performs Gaussian elim.
+% Also outputs determinant
+
+% [Amod,ord,nuroich,detA] = Gel(A,b,verbose)
 %
 % This function perform elimination with partial pivoting and scaling as
 % described in Section 1.3.2 in the Hoffman textbook (viz. it does Gaussian
