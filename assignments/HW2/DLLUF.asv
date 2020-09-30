@@ -1,7 +1,7 @@
-function [L,U] = DLLUF(A,b)
+function [L,U,bprime] = DLLUF(A,b)
 
 % HW 2 Problem 1(a)
-% Doolittle LU Factorization
+% Function that uses simple forward elimination
 
 %% Illustrate vanilla forward elimination
 nref = length(b);               %system size for reference problem
@@ -22,11 +22,15 @@ for ir1 = 2 : nref                                           %loop over rows fro
     end %for
 end %for
 
+fwdsub()
+
 %% Display the L & U matrices from Doolittle factorization
 disp('Doolittle LU factorization: ');
 disp('L = ');
 disp(L)
 disp('U = ');
 disp(U)
+disp('b'' = ')
+disp(bprime)
 
 end % function

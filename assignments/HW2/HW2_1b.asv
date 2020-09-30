@@ -13,7 +13,6 @@ load('testproblem.mat');
 
 %% Use only backsub function to solve for x
 
-disp('LUx = b; therefore, Ux = inv(L)*b, so the solution for x is: ')
-x = backsub(cat(2,U,inv(L)*b));
-disp('x = ')
-disp(x)
+disp('The definition of L & U is A = LU, so')
+ALU = L*U;
+cat()
