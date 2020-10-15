@@ -1,0 +1,232 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>newton3D_exact</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-10-16"><meta name="DC.source" content="newton3D_exact.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">Need access to linear algebra routines for solves at each iteration</a></li><li><a href="#4">Error checking of input</a></li><li><a href="#5">Make sure we don't start at an inflection point with zero derivative</a></li><li><a href="#6">Newton iterations</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [rootx,rooty,rootz,it,success]=newton3D_exact(f,gradf,g,gradg,h,gradh,x0,y0,z0,maxit,tol,verbose)
+</pre><pre class="codeinput"><span class="comment">% root=newton_exact(f,fprime)</span>
+<span class="comment">%</span>
+<span class="comment">% finds a set of roots corresponding to the function f,g (input as a handle)</span>
+<span class="comment">% given a function which computes the derivative</span>
+<span class="comment">%</span>
+<span class="comment">% requires:  Gauss_elim.m and backsub.m</span>
+</pre><h2 id="3">Need access to linear algebra routines for solves at each iteration</h2><p>addpath ../linear_algebra;</p><h2 id="4">Error checking of input</h2><pre class="codeinput">narginchk(6,12);   <span class="comment">%check for correct number of inputs to function</span>
+<span class="keyword">if</span> (nargin&lt;7)
+    maxit=100;       <span class="comment">%maximum number of iterations allowed</span>
+<span class="keyword">end</span> <span class="comment">%if</span>
+<span class="keyword">if</span> (nargin&lt;8)
+    tol=1e-6;        <span class="comment">%how close to zero we need to get to cease iterations</span>
+<span class="keyword">end</span> <span class="comment">%if</span>
+<span class="keyword">if</span> (nargin&lt;9)
+    verbose=false;
+<span class="keyword">end</span> <span class="comment">%if</span>
+</pre><pre class="codeoutput error">Error using newton3D_exact (line 16)
+Not enough input arguments.
+</pre><h2 id="5">Make sure we don't start at an inflection point with zero derivative</h2><pre class="codeinput">[gradfx,gradfy,gradfz] = gradf(x0,y0,z0);
+[gradgx,gradgy,gradgz] = gradg(x0,y0,z0);
+[gradhx,gradhy,gradhz] = gradh(x0,y0,z0);
+<span class="keyword">if</span> (abs(min([gradfx,gradfy,gradfz,gradgx,gradgy,gradgz,gradhx,gradhy,gradhz]))&lt;tol)    <span class="comment">%this needs to really check inflection vs. saddle point; will fix later</span>
+    warning(<span class="string">' Attempting to start Newton iterations near an inflection/saddle point, you may wish to restart with a different guess...'</span>);
+    x0 = x0 + 1;   <span class="comment">%bump the guess a ways off of initial value to see if we can get anything sensible</span>
+    y0 = y0 + 1;
+    z0 = z0 + 1;
+<span class="keyword">end</span> <span class="comment">%if</span>
+</pre><h2 id="6">Newton iterations</h2><pre class="codeinput">it = 1;
+rootx = x0;
+rooty = y0;
+rootz = z0;
+fval = f(rootx,rooty,rootz);
+gval = g(rootx,rooty,rootz);
+hval = h(rootx,rooty,rootz);
+converged=false;
+<span class="keyword">while</span>(~converged &amp;&amp; it&lt;=maxit)
+    [gradfx,gradfy,gradfz] = gradf(rootx,rooty,rootz);
+    [gradgx,gradgy,gradgz] = gradg(rootx,rooty,rootz);
+    [gradhx,gradhy,gradhz] = gradh(rootx,rooty,rootz);
+    A=[gradfx,gradfy,gradfz; <span class="keyword">...</span>
+        gradgx,gradgy,gradgz; <span class="keyword">...</span>
+        gradhx,gradhy,gradhz];
+
+    fvec=[fval;gval;hval];
+    [Amod,ord]=Gauss_elim(A,-1*fvec);
+    dxvec=backsub(Amod(ord,:));
+    detA=prod(diag(Amod(ord,:)));
+    <span class="keyword">if</span> (abs(detA) &lt; 1e-6)
+        error(<span class="string">' Ended up at a point where Newton iteration is singular, try a different starting point'</span>)
+    <span class="keyword">end</span> <span class="comment">%if</span>
+
+    rootx=rootx + dxvec(1);
+    rooty=rooty + dxvec(2);
+    rootz=rootz + dxvec(3);
+    fval = f(rootx,rooty,rootz);                  <span class="comment">% see how far off we are from zero...</span>
+    gval = g(rootx,rooty,rootz);
+    hval = h(rootx,rooty,rootz);
+    <span class="keyword">if</span> (verbose)
+        fprintf(<span class="string">' iteration: %d; x:  %f + %f i; y:  %f + %f i; f: %f, g:  %f\n'</span>,it,real(rootx),imag(rootx),real(rooty),imag(rooty),real(rootz),imag(rootz),fval,gval,hval);
+    <span class="keyword">end</span> <span class="comment">%if</span>
+    it=it+1;
+    converged=abs(fval)+abs(gval)+abs(hval)&lt;tol;
+<span class="keyword">end</span> <span class="comment">%while</span>
+it=it-1;
+
+<span class="keyword">if</span> (~converged)
+    warning(<span class="string">'Used max number of iterations, or derivative near zero...'</span>)
+    success=false;
+<span class="keyword">else</span>
+    success=true;
+<span class="keyword">end</span> <span class="comment">%if</span>
+</pre><pre class="codeinput"><span class="keyword">end</span> <span class="comment">%function</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [rootx,rooty,rootz,it,success]=newton3D_exact(f,gradf,g,gradg,h,gradh,x0,y0,z0,maxit,tol,verbose)
+
+% root=newton_exact(f,fprime)
+%
+% finds a set of roots corresponding to the function f,g (input as a handle)
+% given a function which computes the derivative
+% 
+% requires:  Gauss_elim.m and backsub.m
+
+
+%% Need access to linear algebra routines for solves at each iteration
+% addpath ../linear_algebra;
+
+
+%% Error checking of input
+narginchk(6,12);   %check for correct number of inputs to function
+if (nargin<7)
+    maxit=100;       %maximum number of iterations allowed
+end %if
+if (nargin<8)
+    tol=1e-6;        %how close to zero we need to get to cease iterations
+end %if
+if (nargin<9)
+    verbose=false;
+end %if
+
+
+%% Make sure we don't start at an inflection point with zero derivative
+[gradfx,gradfy,gradfz] = gradf(x0,y0,z0);
+[gradgx,gradgy,gradgz] = gradg(x0,y0,z0);
+[gradhx,gradhy,gradhz] = gradh(x0,y0,z0);
+if (abs(min([gradfx,gradfy,gradfz,gradgx,gradgy,gradgz,gradhx,gradhy,gradhz]))<tol)    %this needs to really check inflection vs. saddle point; will fix later
+    warning(' Attempting to start Newton iterations near an inflection/saddle point, you may wish to restart with a different guess...');
+    x0 = x0 + 1;   %bump the guess a ways off of initial value to see if we can get anything sensible
+    y0 = y0 + 1;
+    z0 = z0 + 1;
+end %if
+
+
+%% Newton iterations
+it = 1;
+rootx = x0;
+rooty = y0;
+rootz = z0;
+fval = f(rootx,rooty,rootz);
+gval = g(rootx,rooty,rootz);
+hval = h(rootx,rooty,rootz);
+converged=false;
+while(~converged && it<=maxit)
+    [gradfx,gradfy,gradfz] = gradf(rootx,rooty,rootz);
+    [gradgx,gradgy,gradgz] = gradg(rootx,rooty,rootz);
+    [gradhx,gradhy,gradhz] = gradh(rootx,rooty,rootz);
+    A=[gradfx,gradfy,gradfz; ...
+        gradgx,gradgy,gradgz; ...
+        gradhx,gradhy,gradhz];
+    
+    fvec=[fval;gval;hval];
+    [Amod,ord]=Gauss_elim(A,-1*fvec);
+    dxvec=backsub(Amod(ord,:));
+    detA=prod(diag(Amod(ord,:)));
+    if (abs(detA) < 1e-6)
+        error(' Ended up at a point where Newton iteration is singular, try a different starting point')
+    end %if
+    
+    rootx=rootx + dxvec(1);
+    rooty=rooty + dxvec(2);
+    rootz=rootz + dxvec(3);
+    fval = f(rootx,rooty,rootz);                  % see how far off we are from zero...
+    gval = g(rootx,rooty,rootz);
+    hval = h(rootx,rooty,rootz);
+    if (verbose)
+        fprintf(' iteration: %d; x:  %f + %f i; y:  %f + %f i; f: %f, g:  %f\n',it,real(rootx),imag(rootx),real(rooty),imag(rooty),real(rootz),imag(rootz),fval,gval,hval);
+    end %if
+    it=it+1;
+    converged=abs(fval)+abs(gval)+abs(hval)<tol;
+end %while
+it=it-1;
+
+if (~converged)
+    warning('Used max number of iterations, or derivative near zero...')
+    success=false;
+else
+    success=true;
+end %if
+
+end %function
+##### SOURCE END #####
+--></body></html>

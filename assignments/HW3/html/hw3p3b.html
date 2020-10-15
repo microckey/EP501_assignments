@@ -1,0 +1,618 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>hw3p3b</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-10-16"><meta name="DC.source" content="hw3p3b.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Define the function &amp; plot it</a></li><li><a href="#3">Find Root #1</a></li><li><a href="#4">Find Root #2</a></li><li><a href="#5">Find Root #3</a></li><li><a href="#6">Find Root #4</a></li><li><a href="#7">Find Root #5</a></li><li><a href="#8">Find Root #6</a></li><li><a href="#9">Find Root #7</a></li><li><a href="#10">Find Root #8</a></li></ul></div><pre class="codeinput"><span class="comment">% HW 3 Problem 3(b)</span>
+<span class="comment">% Find all the roots of the system</span>
+
+clear
+clc
+close <span class="string">all</span>
+</pre><h2 id="2">Define the function &amp; plot it</h2><pre class="codeinput">fm = @(x,y,z) x^2 + y^2 + z^2 - 6;
+gm = @(x,y,z) x^2 - y^2 + 2*z^2 - 2;
+hm = @(x,y,z) 2*x^2 + y^2 - z^2 - 3;
+gradfm = @grad_p3b_f;
+gradgm = @grad_p3b_g;
+gradhm = @grad_p3b_h;
+</pre><h2 id="3">Find Root #1</h2><pre class="codeinput">i = 1;
+x0 = -2;
+y0 = 0.3;
+z0 = 0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'bd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  -1.250000 + 0.000000 i; y:  5.150000 + 0.000000 i; f: 2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  -1.025000 + 0.000000 i; y:  2.866262 + 0.000000 i; f: 1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  -1.000305 + 0.000000 i; y:  1.956461 + 0.000000 i; f: 1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  -1.000000 + 0.000000 i; y:  1.744921 + 0.000000 i; f: 1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  -1.000000 + 0.000000 i; y:  1.732098 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  -1.000000 + 0.000000 i; y:  1.732051 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+
+
+ym =
+
+    1.7321
+
+
+zm =
+
+    1.4142
+
+
+it3D =
+
+     6
+
+
+success3D =
+
+  logical
+
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_01.png" alt=""> <h2 id="4">Find Root #2</h2><pre class="codeinput">i = i + 1;
+x0 = -2;
+y0 = -0.3;
+z0 = 0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'rd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  -1.250000 + 0.000000 i; y:  -5.150000 + 0.000000 i; f: 2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  -1.025000 + 0.000000 i; y:  -2.866262 + 0.000000 i; f: 1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  -1.000305 + 0.000000 i; y:  -1.956461 + 0.000000 i; f: 1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  -1.000000 + 0.000000 i; y:  -1.744921 + 0.000000 i; f: 1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  -1.000000 + 0.000000 i; y:  -1.732098 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  -1.000000 + 0.000000 i; y:  -1.732051 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+
+
+it3D =
+
+     6
+     6
+
+
+success3D =
+
+  2&times;1 logical array
+
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_02.png" alt=""> <h2 id="5">Find Root #3</h2><pre class="codeinput">i = i + 1;
+x0 = -2;
+y0 = 0.3;
+z0 = -0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'md'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  -1.250000 + 0.000000 i; y:  5.150000 + 0.000000 i; f: -2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  -1.025000 + 0.000000 i; y:  2.866262 + 0.000000 i; f: -1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  -1.000305 + 0.000000 i; y:  1.956461 + 0.000000 i; f: -1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  -1.000000 + 0.000000 i; y:  1.744921 + 0.000000 i; f: -1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  -1.000000 + 0.000000 i; y:  1.732098 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  -1.000000 + 0.000000 i; y:  1.732051 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+   -1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+    1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+   -1.4142
+
+
+it3D =
+
+     6
+     6
+     6
+
+
+success3D =
+
+  3&times;1 logical array
+
+   1
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_03.png" alt=""> <h2 id="6">Find Root #4</h2><pre class="codeinput">i = i + 1;
+x0 = 2;
+y0 = 0.3;
+z0 = -0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'gd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  1.250000 + 0.000000 i; y:  5.150000 + 0.000000 i; f: -2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  1.025000 + 0.000000 i; y:  2.866262 + 0.000000 i; f: -1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  1.000305 + 0.000000 i; y:  1.956461 + 0.000000 i; f: -1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  1.000000 + 0.000000 i; y:  1.744921 + 0.000000 i; f: -1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  1.000000 + 0.000000 i; y:  1.732098 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  1.000000 + 0.000000 i; y:  1.732051 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+   -1.0000
+    1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+    1.7321
+    1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+   -1.4142
+   -1.4142
+
+
+it3D =
+
+     6
+     6
+     6
+     6
+
+
+success3D =
+
+  4&times;1 logical array
+
+   1
+   1
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_04.png" alt=""> <h2 id="7">Find Root #5</h2><pre class="codeinput">i = i + 1;
+x0 = 2;
+y0 = 0.3;
+z0 = 0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'wd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  1.250000 + 0.000000 i; y:  5.150000 + 0.000000 i; f: 2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  1.025000 + 0.000000 i; y:  2.866262 + 0.000000 i; f: 1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  1.000305 + 0.000000 i; y:  1.956461 + 0.000000 i; f: 1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  1.000000 + 0.000000 i; y:  1.744921 + 0.000000 i; f: 1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  1.000000 + 0.000000 i; y:  1.732098 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  1.000000 + 0.000000 i; y:  1.732051 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+   -1.0000
+    1.0000
+    1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+    1.7321
+    1.7321
+    1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+   -1.4142
+   -1.4142
+    1.4142
+
+
+it3D =
+
+     6
+     6
+     6
+     6
+     6
+
+
+success3D =
+
+  5&times;1 logical array
+
+   1
+   1
+   1
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_05.png" alt=""> <h2 id="8">Find Root #6</h2><pre class="codeinput">i = i + 1;
+x0 = 2;
+y0 = -0.3;
+z0 = 0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'kd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  1.250000 + 0.000000 i; y:  -5.150000 + 0.000000 i; f: 2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  1.025000 + 0.000000 i; y:  -2.866262 + 0.000000 i; f: 1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  1.000305 + 0.000000 i; y:  -1.956461 + 0.000000 i; f: 1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  1.000000 + 0.000000 i; y:  -1.744921 + 0.000000 i; f: 1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  1.000000 + 0.000000 i; y:  -1.732098 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  1.000000 + 0.000000 i; y:  -1.732051 + 0.000000 i; f: 1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+   -1.0000
+    1.0000
+    1.0000
+    1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+    1.7321
+    1.7321
+    1.7321
+   -1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+   -1.4142
+   -1.4142
+    1.4142
+    1.4142
+
+
+it3D =
+
+     6
+     6
+     6
+     6
+     6
+     6
+
+
+success3D =
+
+  6&times;1 logical array
+
+   1
+   1
+   1
+   1
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_06.png" alt=""> <h2 id="9">Find Root #7</h2><pre class="codeinput">i = i + 1;
+x0 = 2;
+y0 = -0.3;
+z0 = -0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'yd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+hold <span class="string">on</span>
+</pre><pre class="codeoutput"> iteration: 1; x:  1.250000 + 0.000000 i; y:  -5.150000 + 0.000000 i; f: -2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  1.025000 + 0.000000 i; y:  -2.866262 + 0.000000 i; f: -1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  1.000305 + 0.000000 i; y:  -1.956461 + 0.000000 i; f: -1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  1.000000 + 0.000000 i; y:  -1.744921 + 0.000000 i; f: -1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  1.000000 + 0.000000 i; y:  -1.732098 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  1.000000 + 0.000000 i; y:  -1.732051 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+xm =
+
+   -1.0000
+   -1.0000
+   -1.0000
+    1.0000
+    1.0000
+    1.0000
+    1.0000
+
+
+ym =
+
+    1.7321
+   -1.7321
+    1.7321
+    1.7321
+    1.7321
+   -1.7321
+   -1.7321
+
+
+zm =
+
+    1.4142
+    1.4142
+   -1.4142
+   -1.4142
+    1.4142
+    1.4142
+   -1.4142
+
+
+it3D =
+
+     6
+     6
+     6
+     6
+     6
+     6
+     6
+
+
+success3D =
+
+  7&times;1 logical array
+
+   1
+   1
+   1
+   1
+   1
+   1
+   1
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_07.png" alt=""> <h2 id="10">Find Root #8</h2><pre class="codeinput">i = i + 1;
+x0 = -2;
+y0 = -0.3;
+z0 = -0.5;
+<span class="comment">% Newton's method for multi-variable nonlinear equations</span>
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true);
+table(xm,ym,zm,it3D,success3D)
+<span class="comment">% Adding root to the plot</span>
+plot3(xm(i,1),ym(i,1),zm(i,1),<span class="string">'cd'</span>,<span class="string">'MarkerSize'</span>,32,<span class="string">'LineWidth'</span>,8);
+</pre><pre class="codeoutput"> iteration: 1; x:  -1.250000 + 0.000000 i; y:  -5.150000 + 0.000000 i; f: -2.250000, g:  0.000000
+ iteration: 2.714750e+01; x:  -16.835000 + 21.585000 i; y:   iteration: 2; x:  -1.025000 + 0.000000 i; y:  -2.866262 + 0.000000 i; f: -1.569444, g:  0.000000
+ iteration: 5.729239e+00; x:  -4.238522 + 4.853553 i; y:   iteration: 3; x:  -1.000305 + 0.000000 i; y:  -1.956461 + 0.000000 i; f: -1.421890, g:  0.000000
+ iteration: 8.501207e-01; x:  -0.783584 + 0.807186 i; y:   iteration: 4; x:  -1.000000 + 0.000000 i; y:  -1.744921 + 0.000000 i; f: -1.414234, g:  0.000000
+ iteration: 4.480779e-02; x:  -0.044632 + 0.044691 i; y:   iteration: 5; x:  -1.000000 + 0.000000 i; y:  -1.732098 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 1.644212e-04; x:  -0.000164 + 0.000164 i; y:   iteration: 6; x:  -1.000000 + 0.000000 i; y:  -1.732051 + 0.000000 i; f: -1.414214, g:  0.000000
+ iteration: 2.252726e-09; x:  -0.000000 + 0.000000 i; y:  
+ans =
+
+  8&times;5 table
+
+    xm      ym         zm       it3D    success3D
+    __    _______    _______    ____    _________
+
+    -1     1.7321     1.4142     6        true   
+    -1    -1.7321     1.4142     6        true   
+    -1     1.7321    -1.4142     6        true   
+     1     1.7321    -1.4142     6        true   
+     1     1.7321     1.4142     6        true   
+     1    -1.7321     1.4142     6        true   
+     1    -1.7321    -1.4142     6        true   
+    -1    -1.7321    -1.4142     6        true   
+
+</pre><img vspace="5" hspace="5" src="hw3p3b_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% HW 3 Problem 3(b)
+% Find all the roots of the system
+
+clear
+clc
+close all
+
+%% Define the function & plot it
+fm = @(x,y,z) x^2 + y^2 + z^2 - 6;
+gm = @(x,y,z) x^2 - y^2 + 2*z^2 - 2;
+hm = @(x,y,z) 2*x^2 + y^2 - z^2 - 3;
+gradfm = @grad_p3b_f;
+gradgm = @grad_p3b_g;
+gradhm = @grad_p3b_h;
+
+%% Find Root #1
+i = 1;
+x0 = -2;
+y0 = 0.3;
+z0 = 0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'bd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #2
+i = i + 1;
+x0 = -2;
+y0 = -0.3;
+z0 = 0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'rd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #3
+i = i + 1;
+x0 = -2;
+y0 = 0.3;
+z0 = -0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'md','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #4
+i = i + 1;
+x0 = 2;
+y0 = 0.3;
+z0 = -0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'gd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #5
+i = i + 1;
+x0 = 2;
+y0 = 0.3;
+z0 = 0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'wd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #6
+i = i + 1;
+x0 = 2;
+y0 = -0.3;
+z0 = 0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'kd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #7
+i = i + 1;
+x0 = 2;
+y0 = -0.3;
+z0 = -0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'yd','MarkerSize',32,'LineWidth',8);
+hold on
+
+%% Find Root #8
+i = i + 1;
+x0 = -2;
+y0 = -0.3;
+z0 = -0.5;
+% Newton's method for multi-variable nonlinear equations
+[xm(i,1),ym(i,1),zm(i,1),it3D(i,1),success3D(i,1)] = newton3D_exact(fm,gradfm,gm,gradgm,hm,gradhm,x0,y0,z0,1000,1e-6,true);
+table(xm,ym,zm,it3D,success3D)
+% Adding root to the plot
+plot3(xm(i,1),ym(i,1),zm(i,1),'cd','MarkerSize',32,'LineWidth',8);
+##### SOURCE END #####
+--></body></html>
