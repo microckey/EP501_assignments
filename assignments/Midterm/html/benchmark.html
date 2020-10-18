@@ -1,0 +1,450 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>benchmark</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-10-18"><meta name="DC.source" content="benchmark.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Gaussian elimination</a></li><li><a href="#3">Jacobi iteration</a></li><li><a href="#4">Thomas algorithm</a></li></ul></div><pre class="codeinput"><span class="comment">% Evaluate performance and scaling of Gaussian elimination, Jacobi</span>
+<span class="comment">% iteration, and Thomas algorithm by solving systems of different</span>
+<span class="comment">% size and timing the solves</span>
+
+clear
+clc
+close <span class="string">all</span>
+
+nvals=1:1:50;
+testtimes=zeros(size(nvals));
+lrep=10;     <span class="comment">%how many times to repeat each test</span>
+</pre><h2 id="2">Gaussian elimination</h2><pre class="codeinput">disp(<span class="string">'Start of tests of Gaussian-elimination scaling'</span>);
+<span class="keyword">for</span> in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    <span class="comment">%this must be diagonally dominant or else the method won't converge</span>
+    blarge=ones(nlarge,1);
+
+    <span class="keyword">for</span> irep=1:lrep     <span class="comment">%benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.</span>
+        tstart=cputime;
+        [Blargemod,ordlarge]=Gauss_elim(Blarge,blarge);
+        xlarge=backsub(Blargemod(ordlarge,:));
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    <span class="keyword">end</span> <span class="comment">%for</span>
+    disp([<span class="string">' GE solution for system of size '</span>,num2str(nlarge),<span class="string">' takes average time '</span>,num2str(testtimes(in)),<span class="string">' s'</span>]);
+<span class="keyword">end</span> <span class="comment">%for</span>
+
+TT(:,1) = testtimes';
+
+figure(1);
+plot(nvals,testtimes,<span class="string">'-o'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerSize'</span>,10,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'blue'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'blue'</span>)
+xlabel(<span class="string">'system size'</span>);
+ylabel(<span class="string">'time to solve (s)'</span>);
+title(<span class="string">'Empirically Determined Performance'</span>);
+</pre><pre class="codeoutput">Start of tests of Gaussian-elimination scaling
+ GE solution for system of size 1 takes average time 0.0015625 s
+ GE solution for system of size 2 takes average time 0 s
+ GE solution for system of size 3 takes average time 0 s
+ GE solution for system of size 4 takes average time 0 s
+ GE solution for system of size 5 takes average time 0 s
+ GE solution for system of size 6 takes average time 0 s
+ GE solution for system of size 7 takes average time 0 s
+ GE solution for system of size 8 takes average time 0 s
+ GE solution for system of size 9 takes average time 0 s
+ GE solution for system of size 10 takes average time 0 s
+ GE solution for system of size 11 takes average time 0.0015625 s
+ GE solution for system of size 12 takes average time 0 s
+ GE solution for system of size 13 takes average time 0 s
+ GE solution for system of size 14 takes average time 0 s
+ GE solution for system of size 15 takes average time 0 s
+ GE solution for system of size 16 takes average time 0.0015625 s
+ GE solution for system of size 17 takes average time 0 s
+ GE solution for system of size 18 takes average time 0 s
+ GE solution for system of size 19 takes average time 0.0015625 s
+ GE solution for system of size 20 takes average time 0 s
+ GE solution for system of size 21 takes average time 0.0015625 s
+ GE solution for system of size 22 takes average time 0 s
+ GE solution for system of size 23 takes average time 0.0015625 s
+ GE solution for system of size 24 takes average time 0 s
+ GE solution for system of size 25 takes average time 0 s
+ GE solution for system of size 26 takes average time 0.0015625 s
+ GE solution for system of size 27 takes average time 0.0015625 s
+ GE solution for system of size 28 takes average time 0.0015625 s
+ GE solution for system of size 29 takes average time 0 s
+ GE solution for system of size 30 takes average time 0 s
+ GE solution for system of size 31 takes average time 0.0015625 s
+ GE solution for system of size 32 takes average time 0.0015625 s
+ GE solution for system of size 33 takes average time 0.003125 s
+ GE solution for system of size 34 takes average time 0.0015625 s
+ GE solution for system of size 35 takes average time 0.0015625 s
+ GE solution for system of size 36 takes average time 0.0015625 s
+ GE solution for system of size 37 takes average time 0.0015625 s
+ GE solution for system of size 38 takes average time 0.0015625 s
+ GE solution for system of size 39 takes average time 0.003125 s
+ GE solution for system of size 40 takes average time 0.010937 s
+ GE solution for system of size 41 takes average time 0.00625 s
+ GE solution for system of size 42 takes average time 0.0046875 s
+ GE solution for system of size 43 takes average time 0.00625 s
+ GE solution for system of size 44 takes average time 0.0078125 s
+ GE solution for system of size 45 takes average time 0.003125 s
+ GE solution for system of size 46 takes average time 0.003125 s
+ GE solution for system of size 47 takes average time 0.0046875 s
+ GE solution for system of size 48 takes average time 0.0046875 s
+ GE solution for system of size 49 takes average time 0.0046875 s
+ GE solution for system of size 50 takes average time 0.0046875 s
+</pre><img vspace="5" hspace="5" src="benchmark_01.png" alt=""> <h2 id="3">Jacobi iteration</h2><pre class="codeinput">disp(<span class="string">'Start of tests for Jacobi iteration'</span>);
+tol=1e-9;
+testtimes=zeros(size(nvals));
+<span class="keyword">for</span> in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    <span class="comment">%this must be diagonally dominant or else the method won't converge</span>
+    blarge=ones(nlarge,1);
+
+    <span class="keyword">for</span> irep=1:lrep     <span class="comment">%benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.</span>
+        tstart=cputime;
+        x0=randn(nlarge,1);
+        [xit,iterations]=Jacobi(x0,Blarge,blarge,tol,false);
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    <span class="keyword">end</span> <span class="comment">%for</span>
+    disp([<span class="string">' JI solution for system of size '</span>,num2str(nlarge),<span class="string">' takes average time '</span>,num2str(testtimes(in)),<span class="string">' s'</span>]);
+<span class="keyword">end</span> <span class="comment">%for</span>
+
+TT(:,2) = testtimes';
+
+figure(1);
+hold <span class="string">on</span>
+plot(nvals,testtimes,<span class="string">'-^'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerSize'</span>,10,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'green'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>)
+</pre><pre class="codeoutput">Start of tests for Jacobi iteration
+ JI solution for system of size 1 takes average time 0 s
+ JI solution for system of size 2 takes average time 0 s
+ JI solution for system of size 3 takes average time 0 s
+ JI solution for system of size 4 takes average time 0 s
+ JI solution for system of size 5 takes average time 0 s
+ JI solution for system of size 6 takes average time 0 s
+ JI solution for system of size 7 takes average time 0 s
+ JI solution for system of size 8 takes average time 0 s
+ JI solution for system of size 9 takes average time 0 s
+ JI solution for system of size 10 takes average time 0 s
+ JI solution for system of size 11 takes average time 0.0015625 s
+ JI solution for system of size 12 takes average time 0 s
+ JI solution for system of size 13 takes average time 0 s
+ JI solution for system of size 14 takes average time 0 s
+ JI solution for system of size 15 takes average time 0 s
+ JI solution for system of size 16 takes average time 0 s
+ JI solution for system of size 17 takes average time 0 s
+ JI solution for system of size 18 takes average time 0 s
+ JI solution for system of size 19 takes average time 0 s
+ JI solution for system of size 20 takes average time 0 s
+ JI solution for system of size 21 takes average time 0 s
+ JI solution for system of size 22 takes average time 0 s
+ JI solution for system of size 23 takes average time 0 s
+ JI solution for system of size 24 takes average time 0 s
+ JI solution for system of size 25 takes average time 0 s
+ JI solution for system of size 26 takes average time 0 s
+ JI solution for system of size 27 takes average time 0.003125 s
+ JI solution for system of size 28 takes average time 0 s
+ JI solution for system of size 29 takes average time 0 s
+ JI solution for system of size 30 takes average time 0 s
+ JI solution for system of size 31 takes average time 0 s
+ JI solution for system of size 32 takes average time 0 s
+ JI solution for system of size 33 takes average time 0 s
+ JI solution for system of size 34 takes average time 0 s
+ JI solution for system of size 35 takes average time 0 s
+ JI solution for system of size 36 takes average time 0.0015625 s
+ JI solution for system of size 37 takes average time 0 s
+ JI solution for system of size 38 takes average time 0 s
+ JI solution for system of size 39 takes average time 0 s
+ JI solution for system of size 40 takes average time 0 s
+ JI solution for system of size 41 takes average time 0 s
+ JI solution for system of size 42 takes average time 0 s
+ JI solution for system of size 43 takes average time 0 s
+ JI solution for system of size 44 takes average time 0.0015625 s
+ JI solution for system of size 45 takes average time 0 s
+ JI solution for system of size 46 takes average time 0 s
+ JI solution for system of size 47 takes average time 0 s
+ JI solution for system of size 48 takes average time 0 s
+ JI solution for system of size 49 takes average time 0 s
+ JI solution for system of size 50 takes average time 0.0015625 s
+</pre><img vspace="5" hspace="5" src="benchmark_02.png" alt=""> <h2 id="4">Thomas algorithm</h2><pre class="codeinput">disp(<span class="string">'Start of tests for tridiag solver'</span>);
+<span class="comment">% tol=1e-9;</span>
+testtimes=zeros(size(nvals));
+<span class="keyword">for</span> in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    <span class="comment">%this must be diagonally dominant or else the method won't converge</span>
+    blarge=ones(nlarge,1);
+
+    <span class="keyword">for</span> irep=1:lrep     <span class="comment">%benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.</span>
+        tstart=cputime;
+        [xit,iterations]=tridiag(Blarge,blarge);
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    <span class="keyword">end</span> <span class="comment">%for</span>
+    disp([<span class="string">' TA solution for system of size '</span>,num2str(nlarge),<span class="string">' takes average time '</span>,num2str(testtimes(in)),<span class="string">' s'</span>]);
+<span class="keyword">end</span> <span class="comment">%for</span>
+
+TT(:,3) = testtimes';
+disp(<span class="string">'Time required for GE, JI, &amp; TA (s)'</span>)
+disp(TT)
+
+figure(1);
+hold <span class="string">on</span>
+plot(nvals,testtimes,<span class="string">'-s'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerSize'</span>,10,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'red'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'red'</span>)
+legend(<span class="string">'Gauss elim.'</span>,<span class="string">'Jacobi it.'</span>,<span class="string">'Thomas algorithm'</span>)
+</pre><pre class="codeoutput">Start of tests for tridiag solver
+ TA solution for system of size 1 takes average time 0 s
+ TA solution for system of size 2 takes average time 0 s
+ TA solution for system of size 3 takes average time 0 s
+ TA solution for system of size 4 takes average time 0 s
+ TA solution for system of size 5 takes average time 0 s
+ TA solution for system of size 6 takes average time 0 s
+ TA solution for system of size 7 takes average time 0 s
+ TA solution for system of size 8 takes average time 0 s
+ TA solution for system of size 9 takes average time 0 s
+ TA solution for system of size 10 takes average time 0 s
+ TA solution for system of size 11 takes average time 0 s
+ TA solution for system of size 12 takes average time 0 s
+ TA solution for system of size 13 takes average time 0 s
+ TA solution for system of size 14 takes average time 0 s
+ TA solution for system of size 15 takes average time 0 s
+ TA solution for system of size 16 takes average time 0 s
+ TA solution for system of size 17 takes average time 0 s
+ TA solution for system of size 18 takes average time 0 s
+ TA solution for system of size 19 takes average time 0 s
+ TA solution for system of size 20 takes average time 0 s
+ TA solution for system of size 21 takes average time 0 s
+ TA solution for system of size 22 takes average time 0 s
+ TA solution for system of size 23 takes average time 0 s
+ TA solution for system of size 24 takes average time 0 s
+ TA solution for system of size 25 takes average time 0 s
+ TA solution for system of size 26 takes average time 0 s
+ TA solution for system of size 27 takes average time 0 s
+ TA solution for system of size 28 takes average time 0 s
+ TA solution for system of size 29 takes average time 0 s
+ TA solution for system of size 30 takes average time 0 s
+ TA solution for system of size 31 takes average time 0 s
+ TA solution for system of size 32 takes average time 0 s
+ TA solution for system of size 33 takes average time 0 s
+ TA solution for system of size 34 takes average time 0 s
+ TA solution for system of size 35 takes average time 0 s
+ TA solution for system of size 36 takes average time 0 s
+ TA solution for system of size 37 takes average time 0 s
+ TA solution for system of size 38 takes average time 0 s
+ TA solution for system of size 39 takes average time 0 s
+ TA solution for system of size 40 takes average time 0 s
+ TA solution for system of size 41 takes average time 0 s
+ TA solution for system of size 42 takes average time 0 s
+ TA solution for system of size 43 takes average time 0 s
+ TA solution for system of size 44 takes average time 0 s
+ TA solution for system of size 45 takes average time 0 s
+ TA solution for system of size 46 takes average time 0 s
+ TA solution for system of size 47 takes average time 0 s
+ TA solution for system of size 48 takes average time 0 s
+ TA solution for system of size 49 takes average time 0 s
+ TA solution for system of size 50 takes average time 0 s
+Time required for GE, JI, &amp; TA (s)
+    0.0016         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+    0.0016    0.0016         0
+         0         0         0
+         0         0         0
+         0         0         0
+         0         0         0
+    0.0016         0         0
+         0         0         0
+         0         0         0
+    0.0016         0         0
+         0         0         0
+    0.0016         0         0
+         0         0         0
+    0.0016         0         0
+         0         0         0
+         0         0         0
+    0.0016         0         0
+    0.0016    0.0031         0
+    0.0016         0         0
+         0         0         0
+         0         0         0
+    0.0016         0         0
+    0.0016         0         0
+    0.0031         0         0
+    0.0016         0         0
+    0.0016         0         0
+    0.0016    0.0016         0
+    0.0016         0         0
+    0.0016         0         0
+    0.0031         0         0
+    0.0109         0         0
+    0.0063         0         0
+    0.0047         0         0
+    0.0063         0         0
+    0.0078    0.0016         0
+    0.0031         0         0
+    0.0031         0         0
+    0.0047         0         0
+    0.0047         0         0
+    0.0047         0         0
+    0.0047    0.0016         0
+
+</pre><img vspace="5" hspace="5" src="benchmark_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Evaluate performance and scaling of Gaussian elimination, Jacobi
+% iteration, and Thomas algorithm by solving systems of different
+% size and timing the solves
+
+clear
+clc
+close all
+
+nvals=1:1:50;
+testtimes=zeros(size(nvals));
+lrep=10;     %how many times to repeat each test
+
+%% Gaussian elimination
+disp('Start of tests of Gaussian-elimination scaling');
+for in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    %this must be diagonally dominant or else the method won't converge
+    blarge=ones(nlarge,1);
+    
+    for irep=1:lrep     %benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.
+        tstart=cputime;
+        [Blargemod,ordlarge]=Gauss_elim(Blarge,blarge);
+        xlarge=backsub(Blargemod(ordlarge,:));
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    end %for
+    disp([' GE solution for system of size ',num2str(nlarge),' takes average time ',num2str(testtimes(in)),' s']);
+end %for
+
+TT(:,1) = testtimes';
+
+figure(1);
+plot(nvals,testtimes,'-o','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','blue','MarkerFaceColor','blue')
+xlabel('system size');
+ylabel('time to solve (s)');
+title('Empirically Determined Performance');
+
+%% Jacobi iteration
+disp('Start of tests for Jacobi iteration');
+tol=1e-9;
+testtimes=zeros(size(nvals));
+for in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    %this must be diagonally dominant or else the method won't converge
+    blarge=ones(nlarge,1);
+
+    for irep=1:lrep     %benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.
+        tstart=cputime;
+        x0=randn(nlarge,1);
+        [xit,iterations]=Jacobi(x0,Blarge,blarge,tol,false);
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    end %for
+    disp([' JI solution for system of size ',num2str(nlarge),' takes average time ',num2str(testtimes(in)),' s']);
+end %for
+
+TT(:,2) = testtimes';
+
+figure(1);
+hold on
+plot(nvals,testtimes,'-^','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','green','MarkerFaceColor','green')
+
+%% Thomas algorithm
+disp('Start of tests for tridiag solver');
+% tol=1e-9;
+testtimes=zeros(size(nvals));
+for in=1:numel(nvals)
+    nlarge=nvals(in);
+    Blarge=diag(-1*ones(nlarge-1,1),-1)+diag(-1*ones(nlarge-1,1),1)+diag(4*ones(nlarge,1),0);    %this must be diagonally dominant or else the method won't converge
+    blarge=ones(nlarge,1);
+
+    for irep=1:lrep     %benchmark will repeat the same solution several times to eliminate random variations from CPU load, etc.
+        tstart=cputime;
+        [xit,iterations]=tridiag(Blarge,blarge);
+        tend=cputime;
+        testtimes(in)=testtimes(in)+(tend-tstart)/lrep;
+    end %for
+    disp([' TA solution for system of size ',num2str(nlarge),' takes average time ',num2str(testtimes(in)),' s']);
+end %for
+
+TT(:,3) = testtimes';
+disp('Time required for GE, JI, & TA (s)')
+disp(TT)
+
+figure(1);
+hold on
+plot(nvals,testtimes,'-s','LineWidth',2,'MarkerSize',10,'MarkerEdgeColor','red','MarkerFaceColor','red')
+legend('Gauss elim.','Jacobi it.','Thomas algorithm')
+
+
+##### SOURCE END #####
+--></body></html>
