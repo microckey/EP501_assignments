@@ -29,11 +29,11 @@ if 2 < o && o < 7
         elseif itn == 3
             F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k);
         end % if
-        [root(k,1),it(k,1),success(k,1)] = newton_approx(F,x0,maxit,tol);
-        table(root,it,success)
+        [roots(k,1),it(k,1),success(k,1)] = newton_approx(F,x0,maxit,tol);
+        table(roots,it,success)
         
         %% Division
-        N = root(k,1);  % Difine the divisor
+        N = roots(k,1)  % Difine the divisor
         for i = 1 : itn+1   % Reordering the coefficients
             Ap(i,k) = A(itn-i+2,k);    % Increasing order
         end % for
@@ -51,6 +51,10 @@ if 2 < o && o < 7
             A(i,k+1) = Q(i,k);
         end % for
         itn = itn - 1;  % Update for the order of Qn-1
+        
+disp('Qn-1 = ')
+disp(Q)
+
     end % for
     
     %% Coefficients of the quadratic equation
@@ -62,5 +66,5 @@ elseif o == 2
     x = solveqe(A)
 elseif o == 1
     k = 1;
-    [root,it,success] = newton_approx(F,x0,maxit,tol)
+    [roots,it,success] = newton_approx(F,x0,maxit,tol)
 end % if

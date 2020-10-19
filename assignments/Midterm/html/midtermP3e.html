@@ -1,0 +1,276 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>midtermP3e</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-10-19"><meta name="DC.source" content="midtermP3e.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Order &amp; Coefficients of the poly</a></li><li><a href="#3">Setup for iteration</a></li><li><a href="#6">Newton's approx. method to find the 1st root</a></li><li><a href="#7">Division</a></li><li><a href="#9">Coefficients of the quadratic equation</a></li></ul></div><pre class="codeinput"><span class="comment">% Midterm Problem 3 (e)</span>
+<span class="comment">% Polynomial deflation</span>
+<span class="comment">% This script works up to 6th order</span>
+
+clear
+clc
+close <span class="string">all</span>
+</pre><h2 id="2">Order &amp; Coefficients of the poly</h2><pre class="codeinput">o = 5; <span class="comment">% Order of the poly</span>
+itn = o;
+A(:,1) = [1;-15;85;-225;274;-120]; <span class="comment">% Coefficients of the poly (Decreasing order)</span>
+</pre><h2 id="3">Setup for iteration</h2><pre class="codeinput">maxit = 1000000;
+tol = 1e-6;
+x0 = 0.5;   <span class="comment">% Initial guess for the root from the graph</span>
+
+<span class="keyword">if</span> 2 &lt; o &amp;&amp; o &lt; 7
+</pre><pre class="codeinput">    <span class="keyword">for</span> k = 1 : o-2
+</pre><h2 id="6">Newton's approx. method to find the 1st root</h2><pre class="codeinput">        <span class="keyword">if</span> itn == 6
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k) + A(6,k)*x^(o-4-k) + A(7,k)*x^(o-5-k);
+        <span class="keyword">elseif</span> itn == 5
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k) + A(6,k)*x^(o-4-k);
+        <span class="keyword">elseif</span> itn == 4
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k);
+        <span class="keyword">elseif</span> itn == 3
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k);
+        <span class="keyword">end</span> <span class="comment">% if</span>
+        [roots(k,1),it(k,1),success(k,1)] = newton_approx(F,x0,maxit,tol);
+        table(roots,it,success)
+</pre><pre class="codeoutput">
+ans =
+
+  1&times;3 table
+
+    roots    it    success
+    _____    __    _______
+
+      1      59     true  
+
+</pre><pre class="codeoutput">
+ans =
+
+  2&times;3 table
+
+    roots    it     success
+    _____    ___    _______
+
+      1       59     true  
+      2      216     true  
+
+</pre><pre class="codeoutput">
+ans =
+
+  3&times;3 table
+
+    roots    it     success
+    _____    ___    _______
+
+      1       59     true  
+      2      216     true  
+      3      237     true  
+
+</pre><h2 id="7">Division</h2><pre class="codeinput">        N = roots(k,1)  <span class="comment">% Difine the divisor</span>
+        <span class="keyword">for</span> i = 1 : itn+1   <span class="comment">% Reordering the coefficients</span>
+            Ap(i,k) = A(itn-i+2,k);    <span class="comment">% Increasing order</span>
+        <span class="keyword">end</span> <span class="comment">% for</span>
+        <span class="comment">% Division</span>
+        Qi(itn+1,k) = Ap(itn+1,k);
+        <span class="keyword">for</span> i = itn : -1 : 1
+            Qi(i,k) = Ap(i,k) + N*Qi(i+1,k);    <span class="comment">% Increasing order</span>
+        <span class="keyword">end</span> <span class="comment">% for</span>
+        R = Qi(1,k);   <span class="comment">% Remainder</span>
+        <span class="comment">% Coefficients for Q</span>
+        <span class="keyword">for</span> i = 1 : itn
+            Q(i,k) = Qi(itn-i+2,k);    <span class="comment">% Decreasing order</span>
+        <span class="keyword">end</span> <span class="comment">% for</span>
+        <span class="keyword">for</span> i = itn : -1 : 1
+            A(i,k+1) = Q(i,k);
+        <span class="keyword">end</span> <span class="comment">% for</span>
+        itn = itn - 1;  <span class="comment">% Update for the order of Qn-1</span>
+
+disp(<span class="string">'Qn-1 = '</span>)
+disp(Q)
+</pre><pre class="codeoutput">
+N =
+
+    1.0000
+
+Qn-1 = 
+    1.0000
+  -14.0000
+   71.0000
+ -154.0000
+  120.0000
+
+</pre><pre class="codeoutput">
+N =
+
+    2.0000
+
+Qn-1 = 
+    1.0000    1.0000
+  -14.0000  -12.0000
+   71.0000   47.0000
+ -154.0000  -60.0000
+  120.0000         0
+
+</pre><pre class="codeoutput">
+N =
+
+    3.0000
+
+Qn-1 = 
+    1.0000    1.0000    1.0000
+  -14.0000  -12.0000   -9.0000
+   71.0000   47.0000   20.0000
+ -154.0000  -60.0000         0
+  120.0000         0         0
+
+</pre><pre class="codeinput">    <span class="keyword">end</span> <span class="comment">% for</span>
+</pre><h2 id="9">Coefficients of the quadratic equation</h2><pre class="codeinput">    P2 = [A(1,k+1);A(2,k+1);A(3,k+1)];
+    x = solveqe(P2)
+</pre><pre class="codeoutput">
+x =
+
+    5.0000
+    4.0000
+
+</pre><pre class="codeinput"><span class="keyword">elseif</span> o == 2
+    k = 2;
+    x = solveqe(A)
+<span class="keyword">elseif</span> o == 1
+    k = 1;
+    [roots,it,success] = newton_approx(F,x0,maxit,tol)
+<span class="keyword">end</span> <span class="comment">% if</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Midterm Problem 3 (e)
+% Polynomial deflation
+% This script works up to 6th order
+
+clear
+clc
+close all
+
+%% Order & Coefficients of the poly
+o = 5; % Order of the poly
+itn = o;
+A(:,1) = [1;-15;85;-225;274;-120]; % Coefficients of the poly (Decreasing order)
+
+%% Setup for iteration
+maxit = 1000000;
+tol = 1e-6;
+x0 = 0.5;   % Initial guess for the root from the graph
+
+if 2 < o && o < 7
+    for k = 1 : o-2
+        
+        %% Newton's approx. method to find the 1st root
+        if itn == 6
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k) + A(6,k)*x^(o-4-k) + A(7,k)*x^(o-5-k);
+        elseif itn == 5
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k) + A(6,k)*x^(o-4-k);
+        elseif itn == 4
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k) + A(5,k)*x^(o-3-k);
+        elseif itn == 3
+            F = @(x) A(1,k)*x^(o+1-k) + A(2,k)*x^(o-k) + A(3,k)*x^(o-1-k) + A(4,k)*x^(o-2-k);
+        end % if
+        [roots(k,1),it(k,1),success(k,1)] = newton_approx(F,x0,maxit,tol);
+        table(roots,it,success)
+        
+        %% Division
+        N = roots(k,1)  % Difine the divisor
+        for i = 1 : itn+1   % Reordering the coefficients
+            Ap(i,k) = A(itn-i+2,k);    % Increasing order
+        end % for
+        % Division
+        Qi(itn+1,k) = Ap(itn+1,k);
+        for i = itn : -1 : 1
+            Qi(i,k) = Ap(i,k) + N*Qi(i+1,k);    % Increasing order
+        end % for
+        R = Qi(1,k);   % Remainder
+        % Coefficients for Q
+        for i = 1 : itn
+            Q(i,k) = Qi(itn-i+2,k);    % Decreasing order
+        end % for
+        for i = itn : -1 : 1
+            A(i,k+1) = Q(i,k);
+        end % for
+        itn = itn - 1;  % Update for the order of Qn-1
+        
+disp('Qn-1 = ')
+disp(Q)
+
+    end % for
+    
+    %% Coefficients of the quadratic equation
+    P2 = [A(1,k+1);A(2,k+1);A(3,k+1)];
+    x = solveqe(P2)
+    
+elseif o == 2
+    k = 2;
+    x = solveqe(A)
+elseif o == 1
+    k = 1;
+    [roots,it,success] = newton_approx(F,x0,maxit,tol)
+end % if
+##### SOURCE END #####
+--></body></html>

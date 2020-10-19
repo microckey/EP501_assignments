@@ -26,5 +26,8 @@ R = Qi(1)   % Remainder
 
 % Coefficients for Q
 for i = 1 : o
-    Q(i,1) = Qi(o-i+2,1)    % Decreasing order
+    Q(i,1) = Qi(o-i+2,1);    % Decreasing order
 end % for
+
+disp('Q4 = ')
+disp(Q)

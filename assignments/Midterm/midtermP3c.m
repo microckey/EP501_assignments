@@ -27,6 +27,6 @@ maxit = 10000;
 tol = 1e-6;
 x0 = 0.5;   % Initial guess for the root from the graph
 
-[root,it,success] = newton_approx(F,x0,maxit,tol);
+[roots,it,success] = newton_approx(F,x0,maxit,tol);
 
-table(root,it,success)
+table(roots,it,success)
